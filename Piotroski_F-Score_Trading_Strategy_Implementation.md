@@ -6084,7 +6084,7 @@ ax.set_ylabel('Frequency', fontsize=20)
 
 
     
-![png](Piotroski_F-Score_Trading_Strategy_Implementation_files/Piotroski_F-Score_Trading_Strategy_Implementation_13_1.png)
+![png](output_13_1.png)
     
 
 
@@ -7303,7 +7303,7 @@ ax.xaxis.label.set_size(20)
 
 
     
-![png](Piotroski_F-Score_Trading_Strategy_Implementation_files/Piotroski_F-Score_Trading_Strategy_Implementation_25_0.png)
+![png](output_25_0.png)
     
 
 
