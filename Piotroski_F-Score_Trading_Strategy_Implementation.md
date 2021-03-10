@@ -1,3 +1,8 @@
+<script src="//yihui.org/js/math-code.js"></script>
+<!-- Just one possible MathJax CDN below. You may use others. -->
+<script async
+  src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 ## Piotroski F-Score Trading Strategy
 
 Piotroski's F-Score strategy is an algorithmic trading strategy based on a fundamental analysis of the historical financial statements made by a comapny's management. It is described in the paper by Joseph D. Piotroski titled *"Value Investing: The use of historical financial information to separate winners from losers"*.
