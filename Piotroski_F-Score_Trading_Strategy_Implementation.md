@@ -288,8 +288,6 @@ for symbol in stocks:
     sorted_B2M_dict = {k: v for k, v in sorted(B2M_dict.items(), key=lambda item: item[1], reverse=True)}
 ```
 
-    
-
 
 ```python
 import json
@@ -492,8 +490,6 @@ for symbol in list(high_B2M_dict.keys()):
     except IndexError:
         pass
 ```
-
-    
 
 ### F-Score results for the high BM firms
 
