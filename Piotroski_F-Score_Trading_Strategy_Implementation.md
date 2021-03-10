@@ -273,7 +273,7 @@ i=0
 for symbol in stocks:
     i+=1
     try:
-        print(symbol)
+        #print(symbol)
         Total_Assets_cur_year = get_balance_sheet_data(symbol,'2020')['totalAssets']
         Total_Liabilities_cur_year = get_balance_sheet_data(symbol,'2020')['totalLiabilities']
         Book_Value = Total_Assets_cur_year-Total_Liabilities_cur_year
@@ -6071,7 +6071,7 @@ B2M_values = list(B2M_dict.values())
 #px.histogram(x=B2M_dict.values(),log_y=True, nbins=12, labels={'x':'Book to Market value ratio', 'y':'Count'})
 fig, ax = plt.subplots(figsize=(12,8))
 ax.hist(B2M_values,bins=12, log=True)
-ax.set_xlabel('Boo to Market value ratio', fontsize=20)
+ax.set_xlabel('Book to Market value ratio', fontsize=20)
 ax.set_ylabel('Frequency', fontsize=20)
 ```
 
@@ -6135,7 +6135,7 @@ columns = ['symbol', 'F_ROA', 'F_CFO', 'F_delta_ROA', 'F_ACCRUAL', 'F_delta_LEVE
 F_Score_df = pd.DataFrame(columns=columns)
 
 for symbol in list(high_B2M_dict.keys()):
-    print(symbol)
+    #print(symbol)
     
     try:
         # Balance Sheet Data
