@@ -248,7 +248,7 @@ def text_parse(text):
     financial statements to float values  
     '''
     text = text.strip('(').strip(')').strip('$').strip(' ')
-    if text == '-' or text == '':
+    if text == '-' or text == '' or text == 'N/A':
         return 0    
     elif text[-1] == 'T':
         return float(text.strip('T'))*1e12
@@ -259,8 +259,7 @@ def text_parse(text):
     elif text[-1] == 'K':
         return float(text.strip('K'))*1e3
     else:
-        print(text)
-        raise ValueError
+        return(float(text))
         
 ```
 
@@ -271,10 +270,10 @@ def text_parse(text):
 # getting the book values and market values, and their ratios for all the stocks in the list (wherever available) 
 # for the previous year
 
-Book_Value_list = []
-Market_Cap_list= []
-B2M_dict = dict()
-i=0
+#Book_Value_list = []
+#Market_Cap_list= []
+#B2M_dict = dict()
+#i=0
 for symbol in stocks:
     i+=1
     try:
@@ -287,7 +286,7 @@ for symbol in stocks:
         Market_Cap_list.append(Market_Cap)
         B2M = Book_Value/Market_Cap
         B2M_dict[symbol]=B2M
-    except (IndexError, ValueError) as error:
+    except (IndexError, ValueError, TypeError) as error:
         pass
 
     sorted_B2M_dict = {k: v for k, v in sorted(B2M_dict.items(), key=lambda item: item[1], reverse=True)}
@@ -313,7 +312,7 @@ np.mean(list(B2M_dict.values())), np.std(list(B2M_dict.values()))
 
 
 
-    (5.356255152943905, 115.70547827721475)
+    (4.193231510395126, 82.52421205439973, 2690)
 
 
 
@@ -357,7 +356,7 @@ np.quantile(B2M_values, 0.75)
 
 
 
-    0.5983468967003668
+    0.5685465346008152
 
 
 
@@ -372,7 +371,7 @@ np.mean(list(high_B2M_dict.values())), np.std(list(high_B2M_dict.values()))
 
 
 
-    (21.407043921947952, 230.07215485046513)
+    (16.171750550938068, 164.4056576395376)
 
 
 
@@ -446,7 +445,7 @@ for symbol in list(high_B2M_dict.keys()):
                      Gross_Profit_cur_year, Gross_Profit_last_year,
                      Total_Revenue_cur_year, Total_Revenue_last_year]
 
-        if None in financials or 0 in financials:
+        if None in financials:
             continue
 
         else:
@@ -492,7 +491,7 @@ for symbol in list(high_B2M_dict.keys()):
             F_SCORE = F_ROA + F_CFO + F_delta_ROA + F_ACCRUAL + F_delta_LEVER + F_delta_LIQUID + EQ_OFFER + F_delta_MARGIN + F_delta_TURN
 
             F_Score_df = F_Score_df.append(pd.DataFrame([[symbol ,F_ROA, F_CFO, F_delta_ROA, F_ACCRUAL, F_delta_LEVER, F_delta_LIQUID, EQ_OFFER, F_delta_MARGIN, F_delta_TURN, F_SCORE]],columns=columns),ignore_index=True)
-    except IndexError:
+    except (IndexError, ZeroDivisionError) as error:
         pass
 ```
 
@@ -625,7 +624,7 @@ F_Score_df
       <td>...</td>
     </tr>
     <tr>
-      <th>460</th>
+      <th>613</th>
       <td>XOM</td>
       <td>1</td>
       <td>1</td>
@@ -639,7 +638,7 @@ F_Score_df
       <td>5</td>
     </tr>
     <tr>
-      <th>461</th>
+      <th>614</th>
       <td>XRX</td>
       <td>1</td>
       <td>1</td>
@@ -653,7 +652,7 @@ F_Score_df
       <td>5</td>
     </tr>
     <tr>
-      <th>462</th>
+      <th>615</th>
       <td>YPF</td>
       <td>1</td>
       <td>1</td>
@@ -667,7 +666,7 @@ F_Score_df
       <td>5</td>
     </tr>
     <tr>
-      <th>463</th>
+      <th>616</th>
       <td>ZEUS</td>
       <td>1</td>
       <td>1</td>
@@ -681,7 +680,7 @@ F_Score_df
       <td>7</td>
     </tr>
     <tr>
-      <th>464</th>
+      <th>617</th>
       <td>ZLAB</td>
       <td>1</td>
       <td>1</td>
@@ -696,7 +695,7 @@ F_Score_df
     </tr>
   </tbody>
 </table>
-<p>465 rows × 11 columns</p>
+<p>618 rows × 11 columns</p>
 </div>
 
 
@@ -732,19 +731,19 @@ ax.xaxis.label.set_size(20)
 
 
 ```python
-len(F_Score_df[F_Score_df.F_SCORE==3]), len(F_Score_df[F_Score_df.F_SCORE==8]), len(F_Score_df[F_Score_df.F_SCORE==9])
+len(F_Score_df[F_Score_df.F_SCORE==2]), len(F_Score_df[F_Score_df.F_SCORE==3]), len(F_Score_df[F_Score_df.F_SCORE==8]), len(F_Score_df[F_Score_df.F_SCORE==9])
 ```
 
 
 
 
-    (15, 17, 2)
+    (2, 27, 18, 2)
 
 
 
 ### Deciding winners and losers
 
-As we see in this plot, we didn't find any firms with an F-Score of 0 and 1. We can choose the ~2 firms that have the F-Score of 9 along with the 17 firms with the F-Score of 8 for the long positions and the ~15 firms with F-Score of 3 for the short positions.
+As we see in this plot, we didn't find any firms with an F-Score of 0. We can choose the ~2 firms that have the F-Score of 9 along with the 18 firms with the F-Score of 8 for the long positions and the ~27 firms with the F-Score of 3 along with the 2-firms with the F-Score of 2, for the short positions.
 
 ### Potential Winners (Long Positions)
 
@@ -754,26 +753,27 @@ print(F_Score_df[F_Score_df.F_SCORE==9]['symbol'])
 print(F_Score_df[F_Score_df.F_SCORE==8]['symbol'])
 ```
 
-    286    NGD
-    326    PVG
+    376    NGD
+    440    PVG
     Name: symbol, dtype: object
     2       AAWW
-    33      ATNI
-    36       AUY
-    61       BTG
-    62       BTI
-    70       CBD
-    83       CLW
-    91      CNSL
-    118      DHT
-    120     DISH
-    149     EURN
-    248      LPG
-    256      MBT
-    278      NAT
-    329    QRTEA
-    330    QRTEB
-    377     STNG
+    44      ATNI
+    47       AUY
+    82       BTG
+    83       BTI
+    94       CBD
+    113      CLW
+    121     CNSL
+    153      DHT
+    155     DISH
+    193     EURN
+    319      LPG
+    328      MBT
+    366      NAT
+    384     NOMD
+    443    QRTEA
+    444    QRTEB
+    508     STNG
     Name: symbol, dtype: object
 
 
@@ -781,23 +781,44 @@ print(F_Score_df[F_Score_df.F_SCORE==8]['symbol'])
 
 
 ```python
+print(F_Score_df[F_Score_df.F_SCORE==2]['symbol'])
 print(F_Score_df[F_Score_df.F_SCORE==3]['symbol'])
 ```
 
-    43      BDL
-    45     BEDU
-    75     CECE
-    86     CMTL
-    164    FONR
-    205     HUN
-    212     IMO
-    216     IVC
-    219     JOB
-    246     LND
-    250     LRN
-    268     MOV
-    281      NC
-    297    NTWK
-    312     PHX
+    14     AINC
+    493    SMLP
+    Name: symbol, dtype: object
+    9      AENZ
+    57      BDL
+    59     BEDU
+    74      BLU
+    99     CECE
+    107     CHT
+    190     ETM
+    209    FLMN
+    211    FLXS
+    214     FMX
+    215    FONR
+    227    GENC
+    251    HAPP
+    267     HUN
+    276     IMO
+    281     IVC
+    285     JOB
+    317     LND
+    321     LRN
+    348     MOV
+    354    MSGE
+    369      NC
+    394    NTWK
+    406    OMAB
+    424     PHX
+    451     REX
+    498    SOHU
     Name: symbol, dtype: object
 
+
+
+```python
+
+```
